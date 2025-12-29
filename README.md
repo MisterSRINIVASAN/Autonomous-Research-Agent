@@ -28,7 +28,7 @@ The backend communicates with a **React + Vite** frontend in real-time via WebSo
 **Frontend:**
 - React 18
 - Vite
-- TailwindCSS (if applicable) / Custom CSS
+- TailwindCSS (removed to avoid native binding errors) / Custom CSS
 - WebSockets for real-time reactivity
 
 ---
@@ -42,8 +42,8 @@ autonomous_research_agent/
 │   ├── agent/                # Agent Logic
 │   │   ├── graph.py          # StateGraph definitions and model binding
 │   │   ├── state.py          # Agent state definitions
-│   │   └── tools.py          # Custom search and web scraping tools
-│   ├── main.py               # FastAPI server and WebSocket routes
+│   │   └── tools.py          # Custom search and web scraping tools (Langchain DDG)
+│   ├── main.py               # FastAPI server and WebSocket routes with keepalive ping
 │   └── requirements.txt      # Python dependencies
 │
 ├── frontend/                 # React + Vite Frontend
@@ -89,7 +89,7 @@ source venv/bin/activate  # On macOS/Linux
 pip install -r requirements.txt
 python main.py
 ```
-The FastAPI server will run on `http://localhost:8000`.
+The FastAPI server will run on `http://localhost:8001`.
 
 **Frontend Setup:**
 ```bash

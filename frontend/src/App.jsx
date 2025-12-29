@@ -30,7 +30,7 @@ function App() {
     setIsProcessing(true);
     setConnecting(true);
 
-    const ws = new WebSocket('ws://localhost:8000/ws/research');
+    const ws = new WebSocket('ws://localhost:8001/ws/research');
 
     ws.onopen = () => {
       setConnecting(false);
@@ -103,7 +103,9 @@ function App() {
           return (
             <div key={idx} className={`message ${msg.role}`}>
               {msg.role === 'agent' ? (
-                <ReactMarkdown>{msg.content}</ReactMarkdown>
+                <div className="markdown-content">
+                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                </div>
               ) : (
                 msg.content
               )}

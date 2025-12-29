@@ -27,6 +27,18 @@ async def start_research(request: QueryRequest):
 @app.websocket("/ws/research")
 async def websocket_research(websocket: WebSocket):
     await websocket.accept()
+    
+    # We will run a keepalive task in the background
+    async def keepalive(ws: WebSocket):
+        try:
+            while True:
+                await asyncio.sleep(10)
+                await ws.send_json({"type": "ping"})
+        except Exception:
+            pass
+
+    keepalive_task = asyncio.create_task(keepalive(websocket))
+    
     try:
         data = await websocket.receive_text()
         print(f"Received query: {data}")
@@ -50,7 +62,9 @@ async def websocket_research(websocket: WebSocket):
     except Exception as e:
         print(f"Error: {e}")
         await websocket.send_json({"type": "error", "error": str(e)})
+    finally:
+        keepalive_task.cancel()
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True)

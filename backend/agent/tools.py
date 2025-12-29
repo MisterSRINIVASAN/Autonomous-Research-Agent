@@ -4,14 +4,15 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
+from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
+import json
+
 @tool
 def search_the_web(query: str, max_results: int = 5) -> str:
     """Searches the web using DuckDuckGo and returns JSON results with title, link, and snippet."""
     try:
-        results = []
-        with DDGS() as ddgs:
-            for r in ddgs.text(query, max_results=max_results):
-                results.append(r)
+        wrapper = DuckDuckGoSearchAPIWrapper(max_results=max_results)
+        results = wrapper.results(query, max_results)
         return json.dumps(results)
     except Exception as e:
         return f"Error performing search: {e}"
